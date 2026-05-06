@@ -50,6 +50,12 @@ When designing the Match model, the domain complexity of team leagues vs. indivi
 ### Domain Constraint — Race Length Cap
 AI suggested capping race length at 100. I changed it to 20 based on real league knowledge. No league race exceeds 20 games. The AI doesn't know billiards — I do.
 
+### First Working Endpoint — GET /api/players
+Built the PlayersController using async/await patterns and mapped directly to PlayerDTO in the query rather than fetching the model and converting after. This keeps the database model from leaking into the API response layer — a deliberate separation of concerns decision, not just a pattern followed blindly.
+
+### EF Core Migration — InitialCreate
+Add-Migration generates the schema change as readable C# before touching the database. Update-Database executes it. Reviewed the generated migration file before running it to verify the schema matched the intended domain model. Both Players and Matches tables confirmed in SSMS after migration completed successfully.
+
 ---
 
 ## The Standard I Hold Myself To
