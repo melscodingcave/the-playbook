@@ -56,6 +56,10 @@ Built the PlayersController using async/await patterns and mapped directly to Pl
 ### EF Core Migration — InitialCreate
 Add-Migration generates the schema change as readable C# before touching the database. Update-Database executes it. Reviewed the generated migration file before running it to verify the schema matched the intended domain model. Both Players and Matches tables confirmed in SSMS after migration completed successfully.
 
+### Email Case Normalization — POST /api/player
+Email case normalization: AI generated a case-insensitive duplicate check. Developer correctly identified that case-insensitive comparisons are technically wrong at the email protocol level. Solution changed to normalize email to lowercase on input instead — cleaner data storage, exact match comparison. This is an example of domain and protocol knowledge overriding AI output.
+
+
 ---
 
 ## The Standard I Hold Myself To
