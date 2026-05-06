@@ -59,6 +59,23 @@ Add-Migration generates the schema change as readable C# before touching the dat
 ### Email Case Normalization — POST /api/player
 Email case normalization: AI generated a case-insensitive duplicate check. Developer correctly identified that case-insensitive comparisons are technically wrong at the email protocol level. Solution changed to normalize email to lowercase on input instead — cleaner data storage, exact match comparison. This is an example of domain and protocol knowledge overriding AI output.
 
+### Soft Delete Decision — Player Model
+Hard delete rejected because SQL Server's DeleteBehavior.Restrict would refuse deletion of players with match history entirely. Soft delete via IsActive flag chosen because league players go inactive and return — their match history remains relevant across sessions. Domain knowledge drove this decision. IsActive exposed on PlayerDTO to support both active-only views (standings) and full views (admin).
+
+### Migration Default Value Gotcha
+Adding a non-nullable column with a default value via EF Core migration sets existing rows to the type default, not the intended application default. IsActive defaulted to false (0) for existing Players rows instead of true (1). Real production scenario would require a data migration script alongside the schema migration to backfill existing records correctly.
+
+### C# Naming Convention Catch — PascalCase Properties
+C# properties use PascalCase (IsActive) not camelCase (isActive). Coming from other languages like Dart/Flutter and JavaScript where camelCase is standard, this is an easy slip. Caught during red squiggle review rather than at runtime — a good example of why reading compiler errors carefully matters. JSON serialization will automatically convert PascalCase to camelCase in the API response anyway, so the consumer sees isActive while the C# code uses IsActive.
+
+### Match Validation Rules — Domain Knowledge Over AI
+AI would have generated basic existence checks for a POST /api/matches endpoint. The handicap scoring validation — winner's score must equal their race, loser's score must be less than their race — came entirely from domain knowledge. This is a core billiards league rule that makes the difference between an API that accepts data and an API that understands its domain. No amount of prompting would have produced this without the developer knowing the sport.
+
+### Forfeit Handling — CreateMatchDTO
+Forfeit scenario identified as a real league use case during DTO design. IsForfeit flag rejected in favor of explicit ForfeitingPlayerId — knowing a match was forfeited isn't enough, you need to know who forfeited. Nullable because most matches complete normally. Forfeit presence triggers alternate validation path: forfeiting player score must be 0, winner score must equal their race, normal handicap validation skipped. Explicit over implicit is the design principle here.
+
+### Forfeit Score Auto-Setting — API Design Decision
+Initial implementation required the caller to explicitly set the winning player's score equal to their race on a forfeit. Rejected — the API should enforce and auto-set predictable values rather than requiring the consumer to know internal business rules. If PlayerOne forfeits, PlayerTwo's score is automatically set to their race. Reduces caller complexity and eliminates a category of invalid input entirely.
 
 ---
 
