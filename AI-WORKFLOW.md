@@ -104,6 +104,26 @@ Loss streaks are technically accurate data but not universally preferred in leag
 ### BDD Test Suite Complete — 32 Scenarios
 Three feature files covering the full league-api surface: Players (8), Matches (16), Standings (8). Every API endpoint tested. Every domain validation rule covered in Gherkin. Step definitions built to be reusable across feature files. Test data uses GUID-based emails for isolation, soft delete for cleanup, and ScenarioContext for state sharing between steps.
 
+### Vite as a Build Tool
+Vite replaces older tools like Webpack and Create React App. It's faster, simpler to configure, and uses native ES modules in development. The vite.config.ts file is the single source of truth for build configuration — plugins, aliases, server settings, and build output all live there
+
+### UI Color Philosophy — the-practice-log
+Blue is the primary color — tournament-grade felt is most commonly blue. Green is secondary — common in recreational pool halls. Gray is accent — emerging in high-profile tournament settings. Color choices are intentional domain decisions, not aesthetic preferences.
+
+### the-practice-log — Documented Intent: Shot Diagram and Cue Ball Position
+Two features were scoped out of the portfolio implementation but documented as planned features:
+Shot Diagram: A full implementation would use an interactive SVG billiards table where the user places ball positions visually. This requires custom SVG interaction handling, ball placement state management, and a serialization format to store table layouts. Scoped out due to complexity vs portfolio value ratio.
+Cue Ball Position (Intended vs Actual): A full implementation would use the same interactive SVG table to capture where the player intended the cue ball to travel vs where it actually ended up. This is the core metric of position play measurement — arguably the most important skill in billiards. Scoped out for the same reason as diagrams. Both features would be the natural next milestone in a production version of this tool.
+
+### the-practice-log — Documented Intent: Cue Ball Contact Point Visual
+The cue ball contact point selector uses a dropdown for portfolio implementation. A production version would use an interactive cue ball diagram — a circle divided into 9 zones that the user taps to select where they struck the cue ball. This is significantly more intuitive for billiards players than a dropdown and would be the first UI enhancement in a real release.
+
+### AI Integration — the-practice-log
+The AI debrief feature calls the Anthropic Claude API directly from the browser using the claude-sonnet-4-5 model. The prompt includes structured session data — drill type, shot count, made/missed breakdown, and individual shot details including cue ball contact point and power. Initial implementation used markdown formatting which required a custom parser. Simplified by instructing Claude to return plain text with labeled sections instead — less complexity, same readability. The API key is stored in a .env file excluded from version control. The anthropic-dangerous-direct-browser-access header is required for direct browser API calls — in a production system this would be proxied through a backend service to protect the API key.
+
+### API Key Security — Browser vs Server
+API keys stored in .env files are bundled into JavaScript by Vite and visible to anyone with browser DevTools. A production implementation would proxy API calls through a backend service — the browser calls your own API, your API calls Anthropic with a server-side key. The league-api would be a natural proxy candidate in a full system architecture.
+
 ---
 
 ## The Standard I Hold Myself To
