@@ -124,6 +124,9 @@ The AI debrief feature calls the Anthropic Claude API directly from the browser 
 ### API Key Security — Browser vs Server
 API keys stored in .env files are bundled into JavaScript by Vite and visible to anyone with browser DevTools. A production implementation would proxy API calls through a backend service — the browser calls your own API, your API calls Anthropic with a server-side key. The league-api would be a natural proxy candidate in a full system architecture.
 
+### Prompt Engineering Over Output Parsing
+When AI returns formatted output that's difficult to render, fix the prompt instead of building a parser. Instructing Claude to return plain text with labeled sections is simpler and more reliable than parsing markdown in the browser. This applies to any project where AI output needs to be displayed in a UI — control the format at the source.
+
 ---
 
 ## The Standard I Hold Myself To
