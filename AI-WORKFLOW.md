@@ -95,6 +95,15 @@ Test data uses GUID-based unique emails per run to prevent conflicts across mult
 ### BDD Test Execution — Lessons From First Run
 Six of eight scenarios failed on first run with a single root cause: ReadFromJsonAsync<dynamic> returns JsonElement not a true dynamic object. Property access via dot notation fails silently at runtime. Fixed by deserializing to Dictionary<string, JsonElement> and using GetInt32() for typed access. Second issue: ScenarioContext["Response"] was overwritten by DELETE before list assertion could read it. Fixed by using a separate ScenarioContext["ListResponse"] key for list endpoint responses and a dedicated ThenTheListResponseStatusCodeShouldBe step. Third issue: response stream already consumed before Then step tried to read it. Fixed by reading content to string first then deserializing. All three issues caught and fixed without changing the feature file's business logic — the Gherkin scenarios were correct, the step definitions needed adjustment.
 
+### BDD Step Definition Reusability
+Step definitions written for Player Management scenarios were reused directly in Match Management scenarios without modification. SpecFlow resolves step definitions across all classes in the assembly — a step written once is available everywhere. The ThenTheListResponseStatusCodeShouldBe step caught the same ListResponse vs Response context key issue in Matches that was fixed in Players — proof that reusable steps also carry forward lessons learned. Building a solid step library upfront pays dividends as the test suite grows.
+
+### Standings — Streak Display Philosophy
+Loss streaks are technically accurate data but not universally preferred in league display contexts. The API correctly computes and returns both win and loss streaks. Display decisions — whether to show loss streaks, reframe them as "games behind", or omit them entirely — belong in the UI layer, not the API. Separation of concerns means the API returns truth and the front end decides how to present it. Documented as a known UX consideration for future portfolio projects that consume this API.
+
+### BDD Test Suite Complete — 32 Scenarios
+Three feature files covering the full league-api surface: Players (8), Matches (16), Standings (8). Every API endpoint tested. Every domain validation rule covered in Gherkin. Step definitions built to be reusable across feature files. Test data uses GUID-based emails for isolation, soft delete for cleanup, and ScenarioContext for state sharing between steps.
+
 ---
 
 ## The Standard I Hold Myself To
