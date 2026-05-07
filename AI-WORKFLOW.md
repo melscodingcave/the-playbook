@@ -77,6 +77,9 @@ Forfeit scenario identified as a real league use case during DTO design. IsForfe
 ### Forfeit Score Auto-Setting — API Design Decision
 Initial implementation required the caller to explicitly set the winning player's score equal to their race on a forfeit. Rejected — the API should enforce and auto-set predictable values rather than requiring the consumer to know internal business rules. If PlayerOne forfeits, PlayerTwo's score is automatically set to their race. Reduces caller complexity and eliminates a category of invalid input entirely.
 
+### Hard Delete vs Soft Delete — Match vs Player
+Player deletion uses soft delete (IsActive flag) because league players go inactive and return — their match history remains relevant. Match deletion uses hard delete because an incorrectly recorded match should simply not exist. Same application, two different deletion strategies driven by domain logic, not technical preference. The right deletion strategy depends on what the data represents, not a one-size-fits-all pattern.
+
 ---
 
 ## The Standard I Hold Myself To
