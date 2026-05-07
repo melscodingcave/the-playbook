@@ -89,6 +89,12 @@ A production system supporting both SQL Server (local development) and PostgreSQ
 ### Docker Troubleshooting — Provider Version Compatibility
 Npgsql.EntityFrameworkCore.PostgreSQL version must align with EF Core version. Npgsql 8.x is incompatible with EF Core 9.x at runtime despite building successfully. Npgsql 9.0.4 with EF Core 9.0.15 is the correct pairing. Migrations generated against SQL Server use nvarchar — PostgreSQL uses character varying. Provider-specific migrations must be generated with the correct provider active, not just the correct connection string.
 
+### Test Data Strategy — break-and-verify
+Test data uses GUID-based unique emails per run to prevent conflicts across multiple test executions. Soft delete via API is called in AfterScenario hooks to keep the active roster clean. Known gap: soft-deleted test players remain visible to admins via GET /api/players?all=true. A production test strategy would address this via a dedicated test data cleanup role, a test-only hard delete endpoint behind an admin auth layer, or a separate test database that gets wiped between runs. Documented as a known limitation rather than implemented — scope decision, not an oversight.
+
+### BDD Test Execution — Lessons From First Run
+Six of eight scenarios failed on first run with a single root cause: ReadFromJsonAsync<dynamic> returns JsonElement not a true dynamic object. Property access via dot notation fails silently at runtime. Fixed by deserializing to Dictionary<string, JsonElement> and using GetInt32() for typed access. Second issue: ScenarioContext["Response"] was overwritten by DELETE before list assertion could read it. Fixed by using a separate ScenarioContext["ListResponse"] key for list endpoint responses and a dedicated ThenTheListResponseStatusCodeShouldBe step. Third issue: response stream already consumed before Then step tried to read it. Fixed by reading content to string first then deserializing. All three issues caught and fixed without changing the feature file's business logic — the Gherkin scenarios were correct, the step definitions needed adjustment.
+
 ---
 
 ## The Standard I Hold Myself To
