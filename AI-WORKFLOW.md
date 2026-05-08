@@ -127,6 +127,13 @@ API keys stored in .env files are bundled into JavaScript by Vite and visible to
 ### Prompt Engineering Over Output Parsing
 When AI returns formatted output that's difficult to render, fix the prompt instead of building a parser. Instructing Claude to return plain text with labeled sections is simpler and more reliable than parsing markdown in the browser. This applies to any project where AI output needs to be displayed in a UI — control the format at the source.
 
+### Playwright Strict Mode — Specific Locators
+getByText() matches ALL elements containing that text — including dropdown options, headings, and paragraphs. When multiple matches exist Playwright throws a strict mode violation. Fix by using more specific locators: getByRole('heading'), getByRole('button'), getByPlaceholder(), or getByLabel(). Always prefer semantic locators over text matching when elements appear in multiple contexts.
+
+### Playwright vs SpecFlow — Same Concepts, Different Syntax
+Playwright (TypeScript) and SpecFlow (C#) follow the same Arrange/Act/Assert pattern. Key differences: Playwright has no Gherkin layer — tests are pure code. Locators replace step definitions — page.getByText(), page.getByRole(), page.getByPlaceholder(). test.beforeEach replaces [BeforeScenario]. The strict mode violation lesson applies universally — always use semantic locators (getByRole, getByLabel) over text matching when elements appear in multiple contexts on the page.
+
+
 ---
 
 ## The Standard I Hold Myself To
