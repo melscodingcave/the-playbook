@@ -133,6 +133,12 @@ getByText() matches ALL elements containing that text — including dropdown opt
 ### Playwright vs SpecFlow — Same Concepts, Different Syntax
 Playwright (TypeScript) and SpecFlow (C#) follow the same Arrange/Act/Assert pattern. Key differences: Playwright has no Gherkin layer — tests are pure code. Locators replace step definitions — page.getByText(), page.getByRole(), page.getByPlaceholder(). test.beforeEach replaces [BeforeScenario]. The strict mode violation lesson applies universally — always use semantic locators (getByRole, getByLabel) over text matching when elements appear in multiple contexts on the page.
 
+### rack-stats — Data Engineering vs Application Engineering
+Data engineering projects have a different architecture than application projects. The pipeline has three distinct layers: data generation (seed.py), computation (queries.py), and presentation (app.py). Each layer is independently runnable and testable. SQLAlchemy plays the same role as Entity Framework — ORM abstracts the database — but Pandas DataFrames replace DTOs as the data transfer mechanism between layers. SQL knowledge transfers directly; the Python syntax is the only new element.
+
+### Synthetic Data Design — Domain Knowledge as a Feature
+Generic synthetic data produces generic dashboards. Domain-specific synthetic data produces meaningful analytics. Every design decision in rack-stats — venue names, Fargo ranges, race lengths, entry fees, tournament formats — came from billiards domain knowledge. The resulting dashboard tells a story about Florida billiards culture, not just a data pipeline demonstration. Domain knowledge is a feature, not just a constraint.
+
 
 ---
 
