@@ -121,9 +121,6 @@ The cue ball contact point selector uses a dropdown for portfolio implementation
 ### AI Integration — the-practice-log
 The AI debrief feature calls the Anthropic Claude API directly from the browser using the claude-sonnet-4-5 model. The prompt includes structured session data — drill type, shot count, made/missed breakdown, and individual shot details including cue ball contact point and power. Initial implementation used markdown formatting which required a custom parser. Simplified by instructing Claude to return plain text with labeled sections instead — less complexity, same readability. The API key is stored in a .env file excluded from version control. The anthropic-dangerous-direct-browser-access header is required for direct browser API calls — in a production system this would be proxied through a backend service to protect the API key.
 
-### API Key Security — Browser vs Server
-API keys stored in .env files are bundled into JavaScript by Vite and visible to anyone with browser DevTools. A production implementation would proxy API calls through a backend service — the browser calls your own API, your API calls Anthropic with a server-side key. The league-api would be a natural proxy candidate in a full system architecture.
-
 ### Prompt Engineering Over Output Parsing
 When AI returns formatted output that's difficult to render, fix the prompt instead of building a parser. Instructing Claude to return plain text with labeled sections is simpler and more reliable than parsing markdown in the browser. This applies to any project where AI output needs to be displayed in a UI — control the format at the source.
 
@@ -147,6 +144,9 @@ Flutter's widget finder throws an ambiguity error when multiple widgets match �
 
 ### Universal Testing Lesson — Finder Specificity Across Frameworks
 The same strict mode / ambiguity error appeared in three different testing frameworks across this portfolio: SpecFlow (C#), Playwright (TypeScript), and Flutter widget tests (Dart). In every case the fix was identical in concept — use a more specific locator rather than matching on text that appears in multiple contexts. Framework syntax differs; testing principles are universal. When the same lesson appears across multiple projects it becomes a principle, not just a fix.
+
+### API Key Management — Portfolio vs Production
+Two projects in this portfolio call the Anthropic API directly: the-practice-log (React/browser) and chalk-it-up (Flutter). Both use .env files to keep keys out of source control. The browser-based approach additionally requires the anthropic-dangerous-direct-browser-access header. Production implementations of both would proxy through a backend service — league-api is the natural candidate. The .env approach is the correct portfolio-level security practice; the proxy approach is the correct production practice. Both are documented.
 
 
 ---
