@@ -151,6 +151,13 @@ Two projects in this portfolio call the Anthropic API directly: the-practice-log
 ### Tests Caught Real Query Bugs — rack-stats
 Three test failures revealed two actual bugs in queries.py: JOIN multiplication causing match counts and payout totals to be multiplied by the number of tournament entries. The bugs were invisible in the dashboard because the synthetic data happened to produce plausible-looking numbers. Unit tests with known data exposed them immediately. This is exactly why tests matter — bugs that survive visual inspection don't survive assertion.
 
+### Manual Test Cases — the-practice-log
+Two test scenarios require real API calls or significant data setup and are documented as manual tests rather than automated:
+#### AI Debrief — Manual Test:
+Given a session is logged with 50+ shots across multiple cue ball contact points and power levels, when Get AI Debrief is selected, then Claude should return detailed feedback referencing specific patterns in the shot data. Verify the response addresses contact point trends, power consistency, and provides actionable coaching advice. Cannot be automated without mocking the API — mocking would test the mock, not the integration.
+#### Practice Trends — Manual Test:
+Given multiple sessions are logged across different drill types with varied made/missed ratios, when Practice Trends is expanded and each drill type is selected, then the line chart should update to show only that drill type's sessions with accurate made/missed data points. Verify chart updates on dropdown change and empty state displays correctly for drill types with no sessions.
+
 
 ---
 
