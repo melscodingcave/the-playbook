@@ -139,6 +139,15 @@ Data engineering projects have a different architecture than application project
 ### Synthetic Data Design — Domain Knowledge as a Feature
 Generic synthetic data produces generic dashboards. Domain-specific synthetic data produces meaningful analytics. Every design decision in rack-stats — venue names, Fargo ranges, race lengths, entry fees, tournament formats — came from billiards domain knowledge. The resulting dashboard tells a story about Florida billiards culture, not just a data pipeline demonstration. Domain knowledge is a feature, not just a constraint.
 
+### Test Planning — chalk-it-up
+Test scenarios defined before writing test code — same discipline as BDD feature files. Three categories: happy path (core user flows), validation (error handling), and locked state (post-match behavior). The locked state tests are particularly important — verifying that completed matches reject further input is a business rule, not just a UI concern. Test planning preceded implementation in every project in this portfolio.
+
+### Widget Test Strict Mode — Flutter vs Playwright
+Flutter's widget finder throws an ambiguity error when multiple widgets match — identical to Playwright's strict mode violation. find.text('Allen') matched both the player panel name and the break button label. Fixed with .first to target the specific widget. Same lesson, different framework: always use the most specific finder available. Semantic finders (find.byKey, find.byType) are more robust than text finders when text appears in multiple contexts.
+
+### Universal Testing Lesson — Finder Specificity Across Frameworks
+The same strict mode / ambiguity error appeared in three different testing frameworks across this portfolio: SpecFlow (C#), Playwright (TypeScript), and Flutter widget tests (Dart). In every case the fix was identical in concept — use a more specific locator rather than matching on text that appears in multiple contexts. Framework syntax differs; testing principles are universal. When the same lesson appears across multiple projects it becomes a principle, not just a fix.
+
 
 ---
 
