@@ -148,6 +148,9 @@ The same strict mode / ambiguity error appeared in three different testing frame
 ### API Key Management — Portfolio vs Production
 Two projects in this portfolio call the Anthropic API directly: the-practice-log (React/browser) and chalk-it-up (Flutter). Both use .env files to keep keys out of source control. The browser-based approach additionally requires the anthropic-dangerous-direct-browser-access header. Production implementations of both would proxy through a backend service — league-api is the natural candidate. The .env approach is the correct portfolio-level security practice; the proxy approach is the correct production practice. Both are documented.
 
+### Tests Caught Real Query Bugs — rack-stats
+Three test failures revealed two actual bugs in queries.py: JOIN multiplication causing match counts and payout totals to be multiplied by the number of tournament entries. The bugs were invisible in the dashboard because the synthetic data happened to produce plausible-looking numbers. Unit tests with known data exposed them immediately. This is exactly why tests matter — bugs that survive visual inspection don't survive assertion.
+
 
 ---
 
